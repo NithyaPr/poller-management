@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      </br>
+      <h1>SERVICES</h1>
+    </br>
+  </br>
+        <v-data-table
+        :headers="headers"
+        :items="services"
+        :items-per-page="10"
+        v-model="selected"
+      >   
+     
+
+      <template slot="items" slot-scope="props">
+          <tr @click="setServiceId(props.item)">
+          <td>{{ props.service.id }}</td>
+          <td class="text-xs-right">{{ props.service.url }}</td>
+          <td class="text-xs-right">{{ props.service.status }}</td>
+          <td class="text-xs-right">{{ props.service.createdDate }}</td>
+          <td class="text-xs-right">{{ props.service.createdBy }}</td>
+          <td class="text-xs-right">{{ props.service.modifiedDate }}</td>
+          <td class="text-xs-right">{{ props.service.lastActiveDate }}</td>
+
+            </tr>
+        </template>
+      </v-data-table>   
+      <div width="600px"   style = "margin-left: 20px;" > 
+        <input v-model="url" width="300px" placeholder="Enter the url"><v-btn color="primary" width="10px" @click="addService()" > Add </v-btn>
+        <v-btn color="primary" width="10px" @click="pollServices()" > Poll </v-btn>
+
+
+      </div>
+	  </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+	    data () {
+      return {
+        headers: [
+        {text: 'Id', value: 'id'},
+
+          {
+            text: 'Service url',
+            align: 'start',
+            sortable: false,
+            value: 'url',
+          },
+          {text: 'Status', value: 'status'},
+          {text: 'Created Date', value: 'createdDate'},
+          {text: 'Created By', value: 'createdBy'},
+          {text: 'Modified Date', value: 'modifiedDate'},
+          {text: 'Last Active Date', value: 'lastActiveDate'}
+        ],
+        services: [],
+        selected:[],
+        search: '',
+        url: null,
+        user: null,
+        serviceId: null
+      }
+    },
+  created (){
+   this.getServices();   
+  },
+  computed: {
+    msg(){
+    const selectedRow = this.selected[0];
+
+    this.serviceId = selectedRow.id;
+    console.log("service id " + this.serviceId);
+  }
+  },
+    methods: {     
+      setServiceId: function(serviceSelected){
+        alert();
+        console.log("service id " + serviceSelected);
+
+      },
+      getServices: function(){  
+        var serviceHeaders= { 'Access-Control-Allow-Origin': '*',             
+          'Accept': 'application/json'}
+        axios.get('http://localhost:8081/v1/service?user=all',{headers:  serviceHeaders})
+          .then(response => {
+            this.services = response.data;
+
+      })
+      .catch(error => {        
+      }) 
+  }, addService: function(){
+    var serviceHeaders= { 'Access-Control-Allow-Origin': '*',             
+          'Accept': 'application/json'}
+
+          let payload = {url:this.url, createdBy: this.user};
+          axios.post('http://localhost:8081/v1/service', payload, {headers:  serviceHeaders})
+     .then(response => {
+            this.services = response.data;
+            window.location.reload();
+
+  })
+     .catch(error => {
+    console.log(error)
+    
+     })
+  },
+  updateService: function(id){
+    var serviceHeaders= { 'Access-Control-Allow-Origin': '*',             
+          'Accept': 'application/json'}
+          alert(this.serviceId);
+          let payload = {url:this.url};
+          axios.put('http://localhost:8081/v1/service/'+this.serviceId, payload, {headers:  serviceHeaders})
+     .then(response => {
+            this.services = response.data;
+  })
+     .catch(error => {
+    console.log(error)
+    
+     })
+  },
+  deleteService: function(){
+    var serviceHeaders= { 'Access-Control-Allow-Origin': '*',             
+          'Accept': 'application/json'}
+
+          axios.delete('http://localhost:8081/v1/service/'+this.serviceId, {headers:  serviceHeaders})
+     .then(response => {
+            this.services = response.data;
+  })
+     .catch(error => {
+    console.log(error)
+    
+     })
+  },pollServices: function(){  
+        var serviceHeaders= { 'Access-Control-Allow-Origin': '*',             
+          'Accept': 'application/json'}
+        axios.get('http://localhost:8081/v1/poll',{headers:  serviceHeaders})
+          .then(response => {
+            window.location.reload();
+
+      })
+      .catch(error => {        
+      }) 
+  }
+ }
+})
+  </script>
+<body>
+
+</body>
+</html>

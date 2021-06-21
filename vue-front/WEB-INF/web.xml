@@ -1,0 +1,28 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+    <servlet-name>welcome</servlet-name>
+    <jsp-file>/index.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>welcome</servlet-name>
+    <url-pattern>/</url-pattern>
+    </servlet-mapping>
+	
+	<servlet>
+	<servlet-name>mainpage</servlet-name>
+    <jsp-file>/mainpage.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>mainpage</servlet-name>
+    <url-pattern>/oauth2callback</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+	<servlet-name>selectProduct</servlet-name>
+    <jsp-file>/selectProduct.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>selectProduct</servlet-name>
+    <url-pattern>/selectProduct</url-pattern>
+    </servlet-mapping>
+</web-app>
