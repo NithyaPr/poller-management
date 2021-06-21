@@ -17,6 +17,9 @@ public class ServiceModel {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "URL")
     private String url;
 

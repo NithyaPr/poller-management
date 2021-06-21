@@ -84,6 +84,7 @@ public class ServiceBusinessBridgeImpl implements ServiceBusinessBridge {
 
         ServiceModel serviceModel = getServiceModel(serviceId);
         serviceModel.setUrl(serviceDetailDto.getUrl());
+        serviceModel.setName(serviceDetailDto.getName());
         serviceModel.setModifiedDate(LocalDateTime.now());
         ServiceModel service = serviceRepository.save(serviceModel);
         log.info("service updated {} ", service);

@@ -14,6 +14,8 @@ public class ServiceDetailDto {
 
     private String url;
 
+    private String name;
+
     private String status;
 
     private String createdBy;
