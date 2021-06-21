@@ -20,9 +20,9 @@ Poll endpoint can be invoked, if the poll should be triggered manually.
 Database:
 H2 db is used
 
-JDBC url: jdbc:h2:file:C:/data/demo
-user: sa
-password: password
+- JDBC url: jdbc:h2:file:C:/data/demo
+- user: sa
+- password: password
 
 H2 console can be seen in below url
 The http://localhost:8081/h2/login.do
