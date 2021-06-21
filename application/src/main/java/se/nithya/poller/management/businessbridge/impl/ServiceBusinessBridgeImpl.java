@@ -30,7 +30,8 @@ public class ServiceBusinessBridgeImpl implements ServiceBusinessBridge {
     @Override
     public ServiceDetailDto addService(ServiceDetailDto serviceDetailDto) {
         ServiceModel model = buildServiceModel(serviceDetailDto);
-        model.setCreatedBy("admin");
+        model.setCreatedBy(Strings.isEmpty(serviceDetailDto.getCreatedBy()) ? "admin"
+                : serviceDetailDto.getCreatedBy());
         model.setCreatedDate(LocalDateTime.now());
         model = serviceRepository.save(model);
         serviceDetailDto.setId(model.getId());
@@ -75,7 +76,6 @@ public class ServiceBusinessBridgeImpl implements ServiceBusinessBridge {
     @Override
     public List<ServiceDetailDto> getAllService(String user) {
         List<ServiceModel> serviceModels = getServiceModels(user);
-        log.info("Services {} ", serviceModels);
         return serviceModels.stream().map(this::buildServiceDto).collect(Collectors.toList());
     }
 
@@ -87,7 +87,6 @@ public class ServiceBusinessBridgeImpl implements ServiceBusinessBridge {
         serviceModel.setName(serviceDetailDto.getName());
         serviceModel.setModifiedDate(LocalDateTime.now());
         ServiceModel service = serviceRepository.save(serviceModel);
-        log.info("service updated {} ", service);
         return buildServiceDto(service);
     }
 

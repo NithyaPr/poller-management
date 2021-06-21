@@ -41,27 +41,6 @@ public class PollerServiceImpl implements PollerService {
         pollEndpointAsync(model, model.getUrl().trim());
     }
 
-    public void pollEndpoint(ServiceModel service, String baseUrl){
-        HttpHeaders httpRequestHeaders = new HttpHeaders();
-        log.info("Call to service endpoint {} " , baseUrl);
-        Mono<String> response = buildClient(baseUrl).get()
-                .headers(httpHeaders -> httpHeaders.addAll(httpRequestHeaders))
-                .exchangeToMono(resp -> {
-                    if (resp.statusCode()
-                            .equals(HttpStatus.OK)) {
-                        return Mono.just("OK");
-                    } else if (resp.statusCode()
-                            .is4xxClientError()) {
-                        return Mono.just("FAIL");
-                    } else {
-                        return resp.createException()
-                                .flatMap(Mono::error);
-                    }
-                });
-        String status = response.block();
-        saveStatus(status, service);
-    }
-
     public void pollEndpointAsync(ServiceModel service, String baseUrl){
         HttpHeaders httpRequestHeaders = new HttpHeaders();
         httpRequestHeaders.add("transaction-id",
