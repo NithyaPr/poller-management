@@ -1,0 +1,49 @@
+version: "3"
+services:
+  poller-management-db:
+    container_name: poller-management-db
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=pollerdb
+      - MYSQL_PASSWORD=root
+
+  poller-management-app:
+    container_name: poller-management-app
+    build:
+      context: './application'
+      dockerfile: Dockerfile
+    image: poller-management-appp
+    ports:
+      - "8081:8081"
+    environment:
+      - MYSQL_HOST=poller-management-db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    depends_on:
+        poller-management-db:
+          condition: service_completed_successfully
+  poller-management-ui:
+    container_name: poller-management-ui
+    build:
+      context: './poller-management-ui'
+      dockerfile: Dockerfile
+    image: poller-management-uii
+    stdin_open: true
+    expose:
+      - 8080
+    ports:
+      - 8080:80
+    depends_on:
+      poller-management-app:
+        condition: service_healthy
+volumes:
+  db-data:
+networks:
+  default:

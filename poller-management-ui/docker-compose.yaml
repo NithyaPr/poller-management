@@ -1,0 +1,40 @@
+version: "3"
+services:
+  poller-management-db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=pollerdb
+      - MYSQL_PASSWORD=root
+
+  poller-management-app:
+    image: poller-management
+    ports:
+      - "8081:8081"
+    environment:
+      - MYSQL_HOST=poller-management-db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    depends_on:
+        poller-management-db:
+          condition: service_completed_successfully
+  poller-management-ui:
+    image: poller-management-ui
+    stdin_open: true
+    expose:
+      - 8080
+    ports:
+      - 8080:80
+    depends_on:
+      poller-management-app:
+        condition: service_healthy
+volumes:
+  db-data:
+networks:
+  default:
